@@ -33,6 +33,7 @@ def background_thread():
 
 @socketio.on('connect', namespace='/test')
 def test_connect():
+    print 'connect'
     global thread
     with thread_lock:
         if thread is None:
@@ -41,6 +42,7 @@ def test_connect():
 
 @socketio.on('disconnect_request', namespace='/test')
 def disconnect_request():
+    print 'disconnect_request'
     session['receive_count'] = session.get('receive_count', 0) + 1
     emit('my_response',
          {'data': 'Disconnected!', 'count': session['receive_count']})
@@ -48,6 +50,7 @@ def disconnect_request():
 
 @socketio.on('my_event', namespace='/test')
 def test_message(message):
+    print 'my_event'
     session['receive_count'] = session.get('receive_count', 0) + 1
     emit('my_response',
          {'data': message['data'], 'count': session['receive_count']})
