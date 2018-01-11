@@ -7,6 +7,8 @@
 import click
 from colorama import Fore
 from wetalk import db, create_app
+from werkzeug.contrib.fixers import ProxyFix
+import sys
 
 
 app,socketio = create_app('development')
@@ -29,4 +31,9 @@ def create_db_command():
 
 
 if __name__ == '__main__':
-    socketio.run(app,debug = True,port=8080)
+    if sys.platform =='win32':
+        socketio.run(app,debug = True,port=8080)
+    else:
+        app.wsgi_app = ProxyFix(app.wsgi_app)
+        app.run(debug = True,port=8080)
+
